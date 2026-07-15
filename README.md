@@ -4,6 +4,26 @@ Open Occupation Blueprint for **ISCO-08 8331**: Bus and Tram Drivers.
 
 This repository designs a forkable OSS business for an independent passenger transport practice: a vehicle-inspection and boarding-log robot manages pre-trip inspections and passenger counts under a governor-gated actor, so the practice keeps its own trip records instead of renting a closed fleet-management SaaS.
 
+**Maturity: `:implemented`.** `src/transport/` implements the
+`PassengerTransportActor` as a `langgraph.graph/state-graph`
+(`transport.actor`) wired to a `Transport Advisor` (`transport.advisor`)
+and an independent `PassengerTransportGovernor` (`transport.governor`),
+following the itonami actor pattern (ADR-2607011000): `:intake -> :advise
+-> :govern -> :decide -+-> :commit (:ok?) +-> :request-approval (:escalate?,
+human-in-the-loop interrupt) +-> :hold (:hard?)`. 14 tests / 29 assertions
+green (`clojure -M:test`). HARD invariants (always hold, never
+overridable): client provenance, no-actuation (`:effect` must be
+`:propose`), a registered vehicle basis for any route-dispatch
+proposal, the proposed passenger count not exceeding the vehicle's
+registered passenger-capacity ceiling (dispatching beyond it is an
+overcrowded dispatch, not efficient scheduling), and a passed pre-trip
+inspection before any route can be dispatched (dispatching without one
+is an unsafe departure, not efficient service). Always-escalate ops
+(human sign-off regardless of confidence, mapping this repo's Trust
+Controls in [`docs/business-model.md`](docs/business-model.md)):
+`:approve-over-capacity-dispatch` and
+`:approve-emergency-route-deviation`.
+
 ## Robotics premise
 
 All cloud-itonami verticals are designed on the premise that a **robot performs
