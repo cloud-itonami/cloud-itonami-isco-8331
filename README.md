@@ -11,7 +11,7 @@ and an independent `PassengerTransportGovernor` (`transport.governor`),
 following the itonami actor pattern (ADR-2607011000): `:intake -> :advise
 -> :govern -> :decide -+-> :commit (:ok?) +-> :request-approval (:escalate?,
 human-in-the-loop interrupt) +-> :hold (:hard?)`. 14 tests / 29 assertions
-green (`clojure -M:test`). HARD invariants (always hold, never
+green (`kbb -M:test`). HARD invariants (always hold, never
 overridable): client provenance, no-actuation (`:effect` must be
 `:propose`), a registered vehicle basis for any route-dispatch
 proposal, the proposed passenger count not exceeding the vehicle's
