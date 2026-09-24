@@ -1,5 +1,5 @@
 (ns transport.governor-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [transport.store :as store]
             [transport.governor :as governor]))
 
