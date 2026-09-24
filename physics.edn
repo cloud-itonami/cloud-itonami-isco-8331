@@ -1,0 +1,35 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:physics` runs it.
+;;
+;; README "Robotics premise": a vehicle-inspection and boarding-log robot
+;; logs the pre-trip inspection checklist and tracks passenger counts;
+;; dispatch above the vehicle's registered passenger capacity needs human
+;; sign-off. The physical work its passenger count feeds: how the load slows
+;; a bus pulling up a graded street between stops, and the stop-to-stop run
+;; of a tram whose timetable the count is checked against.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isco-8331"
+ :cases
+ [{:id :bus-stop-to-stop-on-grade
+   :kind :transport
+   :procedure "12 t city bus runs 400 m between stops up a 4 degree street at up to 40 km/h; passengers are the payload"
+   :params {:mass-kg 12000.0 :distance-m 400.0 :v-max-mps 11.1 :a-max-mps2 1.0
+            :brake-decel-mps2 1.5 :drive-force-n 20000.0 :crr 0.008 :slope-deg 4.0
+            :cog-height-m 1.0 :support-half-length-m 3.0 :max-time-s 1200.0}
+   :sweep {:param :payload-kg :values [0.0 1500.0 3000.0 4500.0 6000.0]}
+   :quantity :cycle-time-s
+   :limit {:max 60.0 :basis "estimate: one minute of running time scheduled between these stops"}
+   :boundary {:lo 0.0 :hi 9000.0}}
+  {:id :tram-stop-to-stop
+   :kind :transport
+   :procedure "loaded tram runs between stops on level track at up to 50 km/h, 1.0 m/s2 traction and 1.2 m/s2 service braking"
+   :params {:mass-kg 40000.0 :payload-kg 12000.0 :v-max-mps 13.9 :a-max-mps2 1.0
+            :brake-decel-mps2 1.2 :drive-force-n 70000.0 :crr 0.002
+            :cog-height-m 1.2 :support-half-length-m 0.7175 :max-time-s 1200.0}
+   :sweep {:param :distance-m :values [300.0 500.0 700.0 900.0 1100.0]}
+   :quantity :cycle-time-s
+   :limit {:max 75.0 :basis "estimate: 75 s running time per stop interval in the tram timetable"}
+   :boundary {:lo 100.0 :hi 2000.0}}]}
