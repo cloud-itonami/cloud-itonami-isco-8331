@@ -1,5 +1,5 @@
 (ns transport.actor-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [transport.actor :as actor]
             [transport.store :as store]))
 
