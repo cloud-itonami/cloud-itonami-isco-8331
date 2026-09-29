@@ -1,6 +1,6 @@
 (ns transport.store
   "SSoT for the ISCO-08 8331 independent passenger transport practice
-  actor (itonami actor pattern, ADR-2607011000 / CLAUDE.md Actors
+  actor (itonami actor pattern, ADR-2607011000 / AGENTS.md Actors
   section; README's 'Robotics premise' — a vehicle-inspection and
   boarding-log robot performs pre-trip inspection checklist logging
   and passenger-count tracking under this advisor/governor pair,
